@@ -1,0 +1,618 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#080808;font-family:'Georgia',serif;overflow:hidden;}
+  .wrap{position:relative;width:100%;aspect-ratio:16/9;min-height:380px;background:#080808;overflow:hidden;}
+  .bg1{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.04) 0%,transparent 60%);}
+  .bg2{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,transparent 20%,transparent 80%,rgba(0,0,0,0.6) 100%);}
+  .slide{position:absolute;inset:0;opacity:0;transition:opacity 0.85s ease;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .slide.active{opacity:1;pointer-events:auto;}
+  .label{color:#c9a84c;font-size:clamp(11px,0.9vw,12px);letter-spacing:4px;text-transform:uppercase;font-family:sans-serif;}
+  .divider{width:36px;height:1px;background:#c9a84c;opacity:0.4;margin:0 auto;}
+  .nav-btn{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);border-radius:50%;width:clamp(30px,3vw,42px);height:clamp(30px,3vw,42px);cursor:pointer;font-size:clamp(16px,1.5vw,22px);display:flex;align-items:center;justify-content:center;}
+  .gold-btn{background:rgba(201,168,76,0.15)!important;border-color:rgba(201,168,76,0.4)!important;color:#c9a84c!important;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  @keyframes fadeUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes popIn{from{transform:scale(0.82);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes slideL{from{transform:translateX(-20px);opacity:0}to{transform:translateX(0);opacity:1}}
+  @keyframes slideR{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+  .fu{animation:fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both;}
+  .pi{animation:popIn 0.45s cubic-bezier(0.22,1,0.36,1) both;}
+  .fi{animation:fadeIn 0.75s cubic-bezier(0.22,1,0.36,1) both;}
+  .sl{animation:slideL 0.5s cubic-bezier(0.22,1,0.36,1) both;}
+  .sr{animation:slideR 0.5s cubic-bezier(0.22,1,0.36,1) both;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bg1"></div>
+  <div class="bg2"></div>
+
+  <!-- S0: Intro + Pitch -->
+  <div class="slide active" id="s0">
+    <div style="text-align:center;padding:0 8%;">
+      <p class="label" style="margin-bottom:16px;">Customer Enablement Lead</p>
+      <h1 style="color:#fff;font-size:clamp(30px,4.8vw,54px);font-weight:400;letter-spacing:-2px;text-shadow:0 2px 40px rgba(0,0,0,0.8);margin-bottom:8px;">Thomas <span style="font-style:italic;color:#c9a84c;">Hotton</span></h1>
+      <p style="color:rgba(255,255,255,0.3);font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;letter-spacing:2.5px;margin-bottom:24px;">4.5+ YEARS · B2B · REMOTE WORLDWIDE · EN / FR</p>
+      <div class="divider" style="margin-bottom:22px;"></div>
+      <p style="color:rgba(255,255,255,0.88);font-size:clamp(13px,1.9vw,22px);font-style:italic;line-height:1.5;">I help users get genuinely good at what they’re building — not just <span style="color:#c9a84c;">onboarded.</span></p>
+      <div onclick="next()" style="margin-top:36px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;color:rgba(255,255,255,0.28);font-family:sans-serif;font-size:clamp(13px,1.2vw,15px);letter-spacing:3px;text-transform:uppercase;transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">
+        <span>PRESS TO BEGIN</span>
+        <span style="font-size:clamp(16px,1.5vw,20px);">→</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1: Who I am — Career Timeline -->
+  <div class="slide" id="s1">
+    <div style="width:82%;max-width:760px;">
+      <p class="label" style="margin-bottom:8px;text-align:center;font-size:clamp(13px,1.2vw,15px);letter-spacing:3px;">Who I am</p>
+      <div id="timeline" style="display:flex;flex-direction:column;gap:0;position:relative;"></div>
+    </div>
+  </div>
+
+
+  <!-- S3: Unfair Advantages -->
+  <div class="slide" id="s3">
+    <div style="width:88%;max-width:820px;">
+      <p class="label" style="margin-bottom:6px;text-align:center;font-size:clamp(14px,1.4vw,18px);letter-spacing:4px;">Unfair Advantages</p>
+      <p style="color:rgba(255,255,255,0.48);font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;text-align:center;font-style:italic;margin-bottom:28px;">Four things most CSMs don't have.</p>
+      <div id="advantages" style="display:flex;gap:clamp(8px,1.6vw,20px);justify-content:center;align-items:stretch;"></div>
+    </div>
+  </div>
+
+  <!-- S4: Stats (all) -->
+  <div class="slide" id="s4">
+    <div style="text-align:center;width:100%;">
+      <p style="color:#c9a84c;font-size:clamp(16px,1.6vw,20px);font-family:sans-serif;font-weight:600;letter-spacing:2px;margin-bottom:4px;">Account Manager & Client Success</p>
+      <p style="color:rgba(255,255,255,0.35);font-size:clamp(11px,0.95vw,12px);font-family:sans-serif;letter-spacing:1.5px;margin-bottom:22px;">PRINK IRIPARO · Feb 2021 – Aug 2024 · BE / FR / IT</p>
+      <div style="display:flex;justify-content:center;gap:clamp(16px,4vw,50px);flex-wrap:wrap;align-items:flex-start;">
+        <div style="text-align:center;">
+          <div style="display:flex;gap:10px;align-items:baseline;justify-content:center;">
+            <div id="n1a" style="color:#c9a84c;font-size:clamp(30px,4.8vw,58px);font-style:italic;line-height:1;">+0%</div>
+            <div style="color:rgba(201,168,76,0.35);font-size:clamp(18px,2.8vw,34px);font-style:italic;">&</div>
+            <div id="n1b" style="color:#c9a84c;font-size:clamp(30px,4.8vw,58px);font-style:italic;line-height:1;">+0%</div>
+          </div>
+          <p style="color:rgba(255,255,255,0.5);font-size:clamp(11px,0.9vw,12px);font-family:sans-serif;margin-top:6px;letter-spacing:1px;">NRR · two B2B portfolios · 11 months each</p>
+        </div>
+        <div style="width:1px;background:rgba(201,168,76,0.12);align-self:stretch;min-height:50px;"></div>
+        <div style="text-align:center;">
+          <div id="n2" style="color:#c9a84c;font-size:clamp(30px,4.8vw,58px);font-style:italic;line-height:1;">€0K</div>
+          <p style="color:rgba(255,255,255,0.5);font-size:clamp(11px,0.9vw,12px);font-family:sans-serif;margin-top:6px;letter-spacing:1px;">total portfolios · €163K → €330K · 2021–2023</p>
+        </div>
+        <div style="width:1px;background:rgba(201,168,76,0.12);align-self:stretch;min-height:50px;"></div>
+        <div style="text-align:center;">
+          <div id="n3" style="color:#c9a84c;font-size:clamp(30px,4.8vw,58px);font-style:italic;line-height:1;">€0</div>
+          <p style="color:rgba(255,255,255,0.5);font-size:clamp(11px,0.9vw,12px);font-family:sans-serif;margin-top:6px;letter-spacing:1px;">recovered in 6 months · 0 churn · 3.5 years</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: What I bring + Tools + Certifications -->
+  <div class="slide" id="s5">
+    <div style="text-align:center;width:92%;max-width:860px;">
+      <p style="color:#c9a84c;font-size:clamp(13px,1.3vw,16px);letter-spacing:4px;text-transform:uppercase;font-family:sans-serif;margin-bottom:20px;">What I bring</p>
+      <div id="bring-items" style="display:flex;gap:clamp(8px,1vw,14px);justify-content:center;padding:0 2%;flex-wrap:wrap;margin-bottom:22px;"></div>
+      <div id="tools-wrap" style="display:flex;flex-wrap:nowrap;gap:6px;justify-content:center;margin-bottom:26px;align-items:center;width:100%;overflow:visible;"></div>
+      <div style="width:40px;height:1px;background:rgba(201,168,76,0.25);margin:0 auto 22px;"></div>
+      <div id="edu-items" style="display:flex;flex-direction:column;gap:8px;text-align:left;width:100%;"></div>
+    </div>
+  </div>
+
+  <!-- S6: Job Fit (dynamic) -->
+  <div class="slide" id="s6">
+    <div style="width:88%;max-width:820px;">
+      <p class="label" style="margin-bottom:8px;text-align:center;">Why I fit this role</p>
+
+      <div id="jobfit-items" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+        <div style="height:1px;flex:1;background:rgba(201,168,76,0.15);"></div>
+        <p style="color:rgba(255,255,255,0.3);font-size:clamp(10px,0.9vw,11px);font-family:sans-serif;letter-spacing:2px;white-space:nowrap;"><span style="color:#fff;">OPEN TO</span> &nbsp;·&nbsp; <span style="color:#c9a84c;">CONTRACTOR</span> &nbsp;·&nbsp; <span style="color:#c9a84c;">EOR</span> &nbsp;·&nbsp; <span style="color:#c9a84c;">FULL-TIME REMOTE</span></p>
+        <div style="height:1px;flex:1;background:rgba(201,168,76,0.15);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7: Q&A -->
+  <div class="slide" id="s7">
+    <div style="width:92%;max-width:920px;display:flex;flex-direction:column;height:100%;padding:5% 0 4%;">
+      <!-- Idle hero — shown only before Q&A starts -->
+      <div id="qa-idle-hero" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;margin-bottom:6%;">
+        <p class="label" style="margin-bottom:18px;">Your questions, answered.</p>
+        <div class="divider" style="margin-bottom:22px;"></div>
+        <p style="color:rgba(255,255,255,0.72);font-size:clamp(14px,1.5vw,18px);font-family:Georgia,serif;font-style:italic;letter-spacing:0.3px;line-height:1.5;margin-bottom:32px;">&#8212; Things you&#8217;re probably wondering &#8212;</p>
+        <p style="color:rgba(255,255,255,0.55);font-size:clamp(10px,0.85vw,11px);font-family:sans-serif;letter-spacing:3px;">PRESS &#8594; TO BEGIN</p>
+      </div>
+      <!-- Active header — shown once Q&A starts -->
+      <div id="qa-active-header" style="display:none;flex-shrink:0;margin-bottom:20px;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;">
+          <p class="label" id="qa-label"></p>
+          <p id="qa-hint" style="color:rgba(255,255,255,0.7);font-size:11px;font-family:sans-serif;letter-spacing:2px;"></p>
+        </div>
+      </div>
+      <!-- Column headers -->
+      <div id="qa-col-headers" style="display:none;flex-shrink:0;margin-bottom:10px;">
+        <div style="display:flex;gap:0;align-items:center;">
+          <div style="width:50%;padding-right:32px;"><p style="color:rgba(255,255,255,0.7);font-size:10px;font-family:sans-serif;letter-spacing:3px;text-transform:uppercase;margin:0;">Question</p></div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);height:12px;flex-shrink:0;"></div>
+          <div style="flex:1;padding-left:24px;"><p style="color:rgba(255,255,255,0.7);font-size:10px;font-family:sans-serif;letter-spacing:3px;text-transform:uppercase;margin:0;">Answer</p></div>
+        </div>
+        <div style="width:100%;height:0.5px;background:rgba(255,255,255,0.06);margin-top:10px;"></div>
+      </div>
+      <!-- Rows -->
+      <div id="qa-rows" style="display:none;flex-direction:column;flex:1;justify-content:flex-start;gap:0;"></div>
+    </div>
+  </div>
+
+  <!-- S8: CTA -->
+  <div class="slide" id="s8">
+    <div style="text-align:center;transform:translateY(-8%);">
+      <p style="color:#c9a84c;font-size:clamp(28px,4vw,48px);font-style:italic;font-weight:400;margin-bottom:6px;text-shadow:0 2px 40px rgba(201,168,76,0.3);">Let's work together</p>
+      <p style="color:rgba(255,255,255,0.45);font-size:clamp(11px,0.9vw,12px);font-family:sans-serif;letter-spacing:2px;margin-bottom:24px;">CONTRACTOR · EOR · FULL-TIME REMOTE · UTC+6</p>
+      <div class="divider" style="margin-bottom:22px;"></div>
+      <div style="display:flex;align-items:center;justify-content:center;width:100%;max-width:600px;margin:0 auto;">
+        <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;padding-right:24px;">
+          <p style="color:rgba(255,255,255,0.85);font-size:clamp(13px,1.2vw,15px);font-family:sans-serif;margin:0;">thomashotton@gmail.com</p>
+          <button onclick="navigator.clipboard.writeText('thomashotton@gmail.com').then(()=>{const b=this;const orig=b.innerHTML;b.innerHTML='✓';b.style.color='#c9a84c';b.style.borderColor='rgba(201,168,76,0.4)';setTimeout(()=>{b.innerHTML=orig;b.style.color='rgba(255,255,255,0.4)';b.style.borderColor='rgba(255,255,255,0.15)';},1800);})" style="background:transparent;border:0.5px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);border-radius:4px;padding:3px 8px;font-size:10px;font-family:sans-serif;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;flex-shrink:0;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='#c9a84c';" onmouseout="if(this.innerHTML!='✓'){this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.4)';}">COPY</button>
+        </div>
+        <div style="width:1px;height:16px;background:rgba(255,255,255,0.2);flex-shrink:0;"></div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:flex-start;padding-left:24px;">
+          <a href="https://www.linkedin.com/in/thomas-hotton" target="_blank" style="color:rgba(255,255,255,0.85);font-size:clamp(13px,1.2vw,15px);font-family:sans-serif;text-decoration:none;transition:color 0.2s,border-bottom 0.2s;border-bottom:1px solid transparent;padding-bottom:1px;" onmouseover="this.style.color='#c9a84c';this.style.borderBottomColor='#c9a84c';" onmouseout="this.style.color='rgba(255,255,255,0.85)';this.style.borderBottomColor='transparent';">linkedin.com/in/thomas-hotton ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="position:absolute;bottom:clamp(10px,2vh,20px);left:50%;transform:translateX(-50%);display:flex;gap:6px;" id="dots"></div>
+  <div style="position:absolute;bottom:clamp(10px,2vh,20px);right:clamp(12px,1.5vw,20px);display:flex;gap:8px;">
+    <button class="nav-btn" onclick="prev()">‹</button>
+    <button class="nav-btn gold-btn" onclick="next()">›</button>
+  </div>
+
+
+  <div style="position:absolute;top:14px;right:16px;">
+    <span id="counter" style="color:rgba(255,255,255,0.18);font-size:10px;font-family:sans-serif;letter-spacing:1px;">1 / 8</span>
+  </div>
+</div>
+
+<script>
+const TOTAL=8;
+let current=0,qaIdx=0,qaState='idle';
+
+const timelineData=[
+  {year:'2020',role:'The realisation',co:'IKEA / DESCO · Belgium',detail:'I discovered client relationships were my thing — not just selling, but genuinely helping people get what they need.'},
+  {year:'2021',role:'The proof',co:'PRINK IRIPARO · BE / FR / IT',detail:'Better client experience = more revenue. +212% NRR, €163K → €330K across two portfolios, 0 churn. Not despite caring — because of it.'},
+  {year:'2025',role:'The depth',co:'Freelance · 8 SMB clients',detail:'I pushed further into consulting. Strategy, audits, roadmaps. Same instinct — make the client genuinely better off — at a deeper level.'},
+  {year:'Now',role:"What I'm looking for",co:'Remote · Worldwide',detail:'A team where client satisfaction, impact and scale matter. Where I bring those values to a company I believe in.'}
+];
+
+const flItems=[
+  'Brand audits for 8 SMB clients — fashion, fitness, hospitality & content creation',
+  'End-to-end delivery: repositioning, social setup, content production & client onboarding',
+  '+2,000 subscribers in 3 months through video content campaigns',
+  'Post-engagement roadmaps built for every client — strategic continuity after collaboration'
+];
+
+const auditStruct=[
+  {n:'01',t:'Brand Image & Consistency'},
+  {n:'02',t:'Bio — Instagram & TikTok'},
+  {n:'03',t:'Google Business Profile'},
+  {n:'04',t:'Competitive Analysis'},
+  {n:'05',t:'Brand Repositioning'},
+  {n:'06',t:'Offer & Investment Plan'}
+];
+
+const auditTakeaways=[
+  '"Your online image is premium — the showroom needs to match it."',
+  '"Google reviews are your best local social proof — collect them actively."',
+  '"You\'re on a level playing field. The remaining gap closes with consistency."',
+  '"You sell the dream of Moroccan beauty — you are the specialist."'
+];
+
+const bringData=[
+  {icon:'❤️',title:'Retention',proof:'0 churn on key accounts · 3.5 years · 3 markets'},
+  {icon:'📈',title:'Revenue',proof:'€163K → €330K · NRR +212%/+187%'},
+  {icon:'💰',title:'Recovery',proof:'€42K recovered · 6 months'},
+  {icon:'🎯',title:'Consulting',proof:'Audits · roadmaps · strategy'},
+  {icon:'🌍',title:'Languages',proof:'English · Français'}
+];
+
+const toolsRemote=['Slack','Loom','Notion','Scribe','Calendly','Claude Pro'];
+const toolsCS=['HubSpot','Intercom','Zoom','Trello'];
+
+const eduLeft=[
+  {label:'HubSpot | Services & Sales Hub Software · Data Integrations · Frictionless Selling · Inbound · Inbound Sales & Marketing · Sales Hub'},
+  {label:'Gainsight | AI-Powered Customer Success · Durable Growth Playbook'},
+  {label:'Anthropic | Claude 101 · AI Fluency · Introduction to Claude Cowork'}
+];
+const eduRight=[
+  {label:'Coaching | ICF Level 2 Coach Certification (In Progress)'},
+  {label:'Business Management Diploma | Central Jury, BE 2025'},
+  {label:'BAC+2 · ESRA | Higher School of Audiovisual Production, BE 2018'}
+];
+
+const qa=[
+  {q:'Will you actually show up and deliver without anyone watching?',a:'Yes, my clients are my reputation. I\'ve worked within remote teams and my freelance experience taught me personal management outside classical structures to meet deadlines without supervision.'},
+  {q:'Can you work reliably from where you are based?',a:'Yes. Dedicated home office, stable internet, backup office if needed. UTC+6 with EU morning and US EST overlap. I use Savvy Time to stay on schedule across time zones.'},
+  {q:'Why remote — is this a real choice or a fallback?',a:'I chose to relocate to a new country. Deliberately. That makes fully remote non-negotiable, and it\'s also the natural choice given my professional background.'},
+  {q:'How do you communicate and collaborate async?',a:'I use Savvy Time to manage time zones. When I need support, I reach out by messages or a call. I communicate clearly so my team can respond efficiently. I rely on async tools to stay reachable & visible. The team will know from day one the hours I am available for them so they can join me easily. I learned that short, regular check-ins to stay connected can consolidate efficiency & relationships.'},
+  {q:'Are you who you say you are?',a:'I have client reviews, they\'re in French, but I\'m happy to share them. As for my time at Prink, the numbers speak for themselves: +212% NRR, €163K → €330K across two portfolios, 0 churn over 3.5 years on key accounts.'}
+];
+
+const jobFitData=[
+  {requirement:'Video tutorials & educational content',answer:'ESRA BAC+2 audiovisual production. Solo video campaigns delivering +2,000 subscribers in 3 months. Loom walkthroughs and post-engagement roadmaps delivered to every client.'},
+  {requirement:'AI tools expertise · Bolt user',answer:'Anthropic certified x3, Claude Pro daily. Built an interactive CV and a full job pipeline tracker using AI — with zero prior coding background. I am the user you are enabling.'},
+  {requirement:'Onboarding & enablement experience',answer:'Onboarded 8 SMB clients end-to-end into new workflows across social media, Google Business and website platforms. Trained 5 colleagues on client-facing tools at PRINK.'},
+  {requirement:'Live sessions · presentations · webinars',answer:'Presented to groups of 15–20 people in coaching and professional contexts. Comfortable on Zoom, Loom, and live video — camera-first mindset.'},
+  {requirement:'User insights · product feedback loop',answer:'Acted as voice of the customer across 3 markets at PRINK. Built post-engagement roadmaps to surface recurring client needs and feed them back into strategy.'}
+];
+
+function buildDots(){
+  document.getElementById('dots').innerHTML=Array.from({length:TOTAL},(_,i)=>
+    `<div id="d${i}" style="width:5px;height:5px;border-radius:50%;background:${i===0?'#c9a84c':'rgba(255,255,255,0.18)'};transition:all 0.3s;"></div>`
+  ).join('');
+}
+
+function updateUI(idx){
+  document.getElementById('counter').textContent=`${idx+1} / ${TOTAL}`;
+  for(let i=0;i<TOTAL;i++){const d=document.getElementById('d'+i);if(d)d.style.background=i===idx?'#c9a84c':'rgba(255,255,255,0.18)';}
+  const tnav=document.getElementById('text-nav');
+  const tnavNext=document.getElementById('tnav-next');
+  if(tnav){
+    if(idx>=1){
+      tnav.style.display='flex';
+      if(tnavNext) tnavNext.style.display=idx===TOTAL-1?'none':'inline';
+    } else {
+      tnav.style.display='none';
+    }
+  }
+}
+
+function showSlide(idx){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  updateUI(idx);
+  if(idx===1) animTimeline();
+  if(idx===2) animAdvantages();
+  if(idx===3){setTimeout(()=>{countUp('n1a',212,'+','%',1600);countUp('n1b',187,'+','%',1850);countUp('n2',330,'€','K',1700);countUp('n3',42000,'€','',1900);},80);}
+  if(idx===4){animBring();animTools();animEdu();}
+  if(idx===5) animJobFit();
+  if(idx===6){qaIdx=0;qaState='idle';renderQA();}
+}
+
+function countUp(id,target,pre,suf,dur){
+  const el=document.getElementById(id);if(!el)return;
+  const s=performance.now();
+  function step(now){const p=Math.min((now-s)/dur,1);const e=1-Math.pow(1-p,3);el.textContent=pre+Math.round(e*target).toLocaleString()+suf;if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+
+function animTimeline(){
+  const el=document.getElementById('timeline');el.innerHTML='';
+  timelineData.forEach((item,i)=>{
+    const wrap=document.createElement('div');
+    wrap.className='fu';
+    wrap.style.cssText=`display:flex;gap:16px;align-items:flex-start;animation-delay:${i*0.15}s;margin-bottom:${i<timelineData.length-1?'0':'0'};`;
+    const left=`<div style="display:flex;flex-direction:column;align-items:center;gap:0;width:48px;flex-shrink:0;">
+      <div style="width:8px;height:8px;border-radius:50%;background:#c9a84c;margin-top:4px;flex-shrink:0;"></div>
+      ${i<timelineData.length-1?'<div style="width:1px;flex:1;background:rgba(201,168,76,0.2);min-height:28px;margin-top:4px;"></div>':''}
+    </div>`;
+    const right=`<div style="padding-bottom:${i<timelineData.length-1?'16px':'0'};">
+      <span style="color:#c9a84c;font-size:clamp(11px,0.95vw,12px);font-family:sans-serif;letter-spacing:2px;">${item.year}</span>
+      <p style="color:#fff;font-size:clamp(15px,1.5vw,17px);font-family:sans-serif;font-weight:500;margin:3px 0 3px;">${item.role}</p>
+      <p style="color:rgba(255,255,255,0.35);font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;margin:0 0 4px;">${item.co}</p>
+      <p style="color:rgba(255,255,255,0.65);font-size:clamp(13px,1.1vw,14px);font-family:sans-serif;font-style:italic;line-height:1.6;">${item.detail}</p>
+    </div>`;
+    wrap.innerHTML=left+right;
+    el.appendChild(wrap);
+  });
+}
+
+function animFreelance(){
+  const el=document.getElementById('fl-items');el.innerHTML='';
+  flItems.forEach((pt,i)=>{
+    const div=document.createElement('div');
+    div.className='fu';
+    div.style.cssText=`display:flex;gap:10px;align-items:flex-start;animation-delay:${i*0.1}s;`;
+    div.innerHTML=`<span style="color:#c9a84c;flex-shrink:0;margin-top:2px;font-size:11px;">—</span><span style="color:rgba(255,255,255,0.62);font-size:clamp(13px,1.1vw,14px);font-family:sans-serif;line-height:1.55;">${pt}</span>`;
+    el.appendChild(div);
+  });
+}
+
+function animAdvantages(){
+  const el=document.getElementById('advantages');
+  if(!el)return;
+  el.innerHTML='';
+  const advantagesData=[
+    {
+      title:'Coaching',
+      icon:'🧠',
+      desc:'8+ years as a coaching client + informal coaching practice + ICF Level 2 in progress.',
+      proof:'I understand the 1:1 and group dynamic from both sides, what it feels like to be guided, and how to guide a client.'
+    },
+    {
+      title:'Production',
+      icon:'🎬',
+      desc:'Most CSMs know the product. Few know how to make it land.',
+      proof:'I can create client-facing content solo: onboarding videos, walkthroughs, demos. And yes, this CV too. I also show up to client calls with a dedicated studio setup, because how you look on screen is part of the trust you build from day one.'
+    },
+    {
+      title:'Insight',
+      icon:'🔍',
+      desc:'Consulting mindset applied to client relationships.',
+      proof:'Most CSMs manage the relationship. I read the business behind it, positioning gaps, perception issues, what the data doesn\'t say out loud. Brand audits, health scoring, customer journey analysis: I reframe the problem before solving it.'
+    },
+    {
+      title:'Speed & AI Execution',
+      icon:'⚡',
+      desc:'I had no idea how to code. Just an idea, Claude and in 24 hours it was done.',
+      proof:'This CV is the proof of concept. Imagine what I can do with your product and clients in a year.'
+    }
+  ];
+  advantagesData.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='fu';
+    div.style.cssText=`flex:1;background:rgba(201,168,76,0.07);border:0.5px solid rgba(201,168,76,0.45);border-radius:12px;padding:clamp(14px,2vw,24px) clamp(12px,1.8vw,20px);display:flex;flex-direction:column;gap:10px;animation-delay:${i*0.15}s;position:relative;overflow:hidden;`;
+    div.innerHTML=`
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent);"></div>
+      <div style="font-size:clamp(20px,2.4vw,28px);">${item.icon}</div>
+      <p style="color:#c9a84c;font-size:clamp(14px,1.4vw,17px);font-family:sans-serif;font-weight:600;letter-spacing:1px;">${item.title}</p>
+      <p style="color:rgba(255,255,255,0.55);font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;line-height:1.6;">${item.desc}</p>
+      <div style="width:24px;height:1px;background:rgba(201,168,76,0.3);"></div>
+      <p style="color:rgba(255,255,255,0.88);font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;line-height:1.7;font-style:italic;">${item.proof}</p>
+    `;
+    el.appendChild(div);
+  });
+}
+
+function animAudit(){
+  // retired — replaced by animAdvantages
+}
+
+function animBring(){
+  const el=document.getElementById('bring-items');el.innerHTML='';
+  bringData.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='pi';
+    div.style.cssText=`text-align:center;background:rgba(0,0,0,0.5);border:0.5px solid rgba(201,168,76,0.22);border-radius:10px;padding:clamp(12px,1.5vw,18px) clamp(10px,1.5vw,16px);flex:1;max-width:155px;animation-delay:${i*0.1}s;`;
+    div.innerHTML=`<div style="font-size:clamp(18px,1.8vw,22px);margin-bottom:8px;">${item.icon}</div><p style="color:#fff;font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;margin:0 0 5px;font-weight:500;">${item.title}</p><p style="color:rgba(201,168,76,0.7);font-size:clamp(10px,0.9vw,11px);font-family:sans-serif;margin:0;line-height:1.5;">${item.proof}</p>`;
+    el.appendChild(div);
+  });
+}
+
+function animTools(){
+  const el=document.getElementById('tools-wrap');el.innerHTML='';
+  el.style.cssText='display:flex;flex-wrap:nowrap;gap:6px;justify-content:center;margin-bottom:26px;align-items:center;width:100%;overflow:visible;';
+  const groups=[
+    {label:'Remote Stack',items:toolsRemote},
+    {label:'CS Tools',items:toolsCS}
+  ];
+  groups.forEach((group,gi)=>{
+    if(gi>0){
+      const sep=document.createElement('div');
+      sep.style.cssText='width:1px;height:14px;background:rgba(201,168,76,0.2);flex-shrink:0;margin:0 6px;';
+      el.appendChild(sep);
+    }
+    const lbl=document.createElement('span');
+    lbl.style.cssText='color:#c9a84c;font-size:clamp(10px,0.9vw,11px);font-family:sans-serif;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;margin-right:5px;';
+    lbl.textContent=group.label.replace('Remote Stack','Remote').replace('CS Tools','Tools')+' :';
+    el.appendChild(lbl);
+    group.items.forEach((t,i)=>{
+      const div=document.createElement('div');
+      div.className='pi';
+      div.style.cssText=`background:rgba(0,0,0,0.5);border:0.5px solid rgba(255,255,255,0.1);border-radius:20px;padding:5px 12px;color:rgba(255,255,255,0.7);font-size:clamp(11px,1vw,12px);font-family:sans-serif;white-space:nowrap;animation-delay:${(gi*6+i)*0.05+0.4}s;`;
+      div.textContent=t;
+      el.appendChild(div);
+    });
+  });
+}
+
+function animEdu(){
+  const el=document.getElementById('edu-items');el.innerHTML='';
+  const cols=document.createElement('div');
+  cols.style.cssText='display:flex;gap:16px;width:100%;align-items:flex-start;';
+  // Add column headers
+  const headers=['Certifications','Education'];
+  [eduLeft,eduRight].forEach((col,ci)=>{
+    const colEl=document.createElement('div');
+    colEl.style.cssText='flex:1;display:flex;flex-direction:column;gap:9px;';
+    const colTitle=document.createElement('p');
+    colTitle.style.cssText='color:#c9a84c;font-size:clamp(10px,0.9vw,11px);font-family:sans-serif;letter-spacing:3px;text-transform:uppercase;margin:0 0 10px;font-weight:600;text-align:center;';
+    colTitle.textContent=headers[ci];
+    colEl.appendChild(colTitle);
+    col.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='fu';
+      div.style.cssText=`display:flex;align-items:flex-start;gap:8px;background:rgba(0,0,0,0.4);border:0.5px solid rgba(201,168,76,0.12);border-radius:7px;padding:10px 14px;animation-delay:${(ci*3+i)*0.08}s;`;
+      div.innerHTML=`<span style="color:#c9a84c;flex-shrink:0;margin-top:2px;font-size:11px;">—</span><span style="color:rgba(255,255,255,0.68);font-size:clamp(12px,1.05vw,13px);font-family:sans-serif;line-height:1.5;">${item.label}</span>`;
+      colEl.appendChild(div);
+    });
+    cols.appendChild(colEl);
+  });
+  el.appendChild(cols);
+}
+
+function animJobFit(){
+  const el=document.getElementById('jobfit-items');
+  if(!el)return;
+  el.innerHTML='';
+  jobFitData.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className='fu';
+    div.style.cssText=`display:flex;align-items:flex-start;gap:14px;background:rgba(0,0,0,0.4);border:0.5px solid rgba(201,168,76,0.15);border-radius:8px;padding:12px 16px;animation-delay:${i*0.1}s;`;
+    div.innerHTML=`
+      <span style="color:#c9a84c;font-size:clamp(11px,0.9vw,12px);font-family:sans-serif;letter-spacing:2px;flex-shrink:0;margin-top:2px;">→</span>
+      <div>
+        <p style="color:#c9a84c;font-size:clamp(12px,1.1vw,13px);font-family:sans-serif;font-weight:600;margin:0 0 4px;">${item.requirement}</p>
+        <p style="color:rgba(255,255,255,0.62);font-size:clamp(11px,1vw,12px);font-family:sans-serif;line-height:1.6;margin:0;">${item.answer}</p>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function renderQA(){
+  const rows   = document.getElementById('qa-rows');
+  const hint   = document.getElementById('qa-hint');
+  const label       = document.getElementById('qa-label');
+  const hdrs        = document.getElementById('qa-col-headers');
+  const idleHero    = document.getElementById('qa-idle-hero');
+  const activeHdr   = document.getElementById('qa-active-header');
+  if(!rows) return;
+
+  const isGold = qaState==='gold';
+
+  if(qaState==='idle'){
+    idleHero.style.display='flex';
+    activeHdr.style.display='none';
+    hdrs.style.display='none';
+    rows.style.display='none';
+    rows.innerHTML='';
+    return;
+  }
+
+  idleHero.style.display='none';
+  activeHdr.style.display='block';
+  hdrs.style.display='block';
+  rows.style.display='flex';
+  rows.style.justifyContent='flex-start';
+  rows.innerHTML='';
+
+  const total = isGold ? qa.length : qaIdx+1;
+
+  for(let i=0;i<total;i++){
+    const isPast   = i < qaIdx;
+    const isActive = i === qaIdx && !isGold;
+    const hasAns   = isPast || isGold || (isActive && qaState==='answer');
+
+    const row = document.createElement('div');
+
+    // Only animate the newly added row
+    if(isActive && qaState==='question') row.className='fi';
+    if(isActive && qaState==='answer' && !hasAns) row.className='fi';
+
+    row.style.cssText=`
+      display:flex;align-items:stretch;
+      padding:clamp(8px,1.1vw,14px) 0;
+      ${i < total-1 ? 'border-bottom:0.5px solid rgba(255,255,255,0.05);' : ''}
+      opacity:${isPast && !isGold ? '0.55' : '1'};
+      transition:opacity 0.8s ease, transform 0.8s ease;
+    `;
+
+    // Q column
+    const qCol = document.createElement('div');
+    qCol.style.cssText=`width:50%;padding-right:32px;display:flex;align-items:center;`;
+    const qText = document.createElement('p');
+    qText.style.cssText=`
+      font-size:clamp(13px,1.25vw,15px);
+      font-family:sans-serif;
+      line-height:1.4;
+      margin:0;
+      white-space:nowrap;
+      color:${isGold ? 'rgba(255,255,255,0.85)' : isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)'};
+      font-style:${isActive && !isGold ? 'italic' : 'normal'};
+      transition:color 0.8s ease;
+    `;
+    qText.textContent = qa[i].q;
+    qCol.appendChild(qText);
+
+    // Separator
+    const sep = document.createElement('div');
+    sep.style.cssText=`
+      width:1px;flex-shrink:0;
+      background:${isGold ? 'rgba(201,168,76,0.35)' : isActive ? 'rgba(201,168,76,0.3)' : 'rgba(255,255,255,0.05)'};
+      transition:background 0.8s ease;
+    `;
+
+    // A column
+    const aCol = document.createElement('div');
+    aCol.style.cssText=`flex:1;padding-left:32px;display:flex;align-items:center;`;
+
+    if(hasAns){
+      const aWrap = document.createElement('div');
+      aWrap.className = isActive ? 'fi' : '';
+      const aText = document.createElement('p');
+      aText.style.cssText=`
+        font-size:clamp(13px,1.2vw,14px);
+        font-family:sans-serif;
+        line-height:1.65;
+        margin:0;
+        color:#c9a84c;
+        transition:opacity 0.8s ease;
+        ${isPast && !isGold ? 'opacity:0.5;' : 'opacity:1;'}
+        display:-webkit-box;
+        -webkit-line-clamp:6;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+      `;
+      aText.textContent = qa[i].a;
+      aWrap.appendChild(aText);
+      aCol.appendChild(aWrap);
+    } else if(isActive){
+      const prompt = document.createElement('p');
+      prompt.style.cssText=`color:rgba(255,255,255,0.1);font-size:9px;font-family:sans-serif;letter-spacing:2.5px;margin:0;`;
+      prompt.textContent='PRESS → FOR ANSWER';
+      aCol.appendChild(prompt);
+    }
+
+    row.appendChild(qCol);
+    row.appendChild(sep);
+    row.appendChild(aCol);
+    rows.appendChild(row);
+  }
+
+  // Gold recap — re-render all with full opacity + gold answers
+  if(isGold){
+    rows.querySelectorAll('div[style*="opacity"]').forEach(r=>{r.style.opacity='1';});
+  }
+
+  if(isGold){
+    label.textContent='Recap';
+    hint.textContent='PRESS → TO CONTINUE';
+  } else if(qaState==='question'){
+    label.textContent=`${qaIdx+1} / ${qa.length}`;
+    hint.textContent='PRESS → FOR ANSWER';
+  } else {
+    label.textContent=`${qaIdx+1} / ${qa.length}`;
+    hint.textContent=qaIdx<qa.length-1 ? 'PRESS → NEXT' : 'PRESS → FOR RECAP';
+  }
+}
+
+function next(){
+  if(current===6){
+    if(qaState==='idle')   { qaState='question'; renderQA(); return; }
+    if(qaState==='question'){ qaState='answer';   renderQA(); return; }
+    if(qaState==='answer'){
+      if(qaIdx<qa.length-1){ qaIdx++; qaState='question'; renderQA(); return; }
+      qaState='gold'; renderQA(); return;
+    }
+    if(qaState==='gold'){ current=7; showSlide(7); return; }
+  }
+  if(current<TOTAL-1){ current++; showSlide(current); }
+}
+
+function prev(){
+  if(current===6){
+    if(qaState==='gold')    { qaState='answer';   renderQA(); return; }
+    if(qaState==='answer')  { qaState='question'; renderQA(); return; }
+    if(qaState==='question'){
+      if(qaIdx>0){ qaIdx--; qaState='answer'; renderQA(); return; }
+      qaState='idle'; renderQA(); return;
+    }
+  }
+  if(current>0){ current--; showSlide(current); }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();}
+  if(e.key==='ArrowLeft') prev();
+});
+
+buildDots();showSlide(0);
+</script>
+</body>
+</html>
